@@ -2,9 +2,16 @@
 // of the game relating to the interactions between the player and the
 // enemy and also relating to how our enemies are created and evolve over time
 class Engine {
+  
   // The constructor has one parameter. It will refer to the DOM node that we will be adding everything to.
   // You need to provide the DOM node when you create an instance of the class
   constructor(theRoot) {
+
+    // this.score = 0
+    //Background music
+    this.music = new Audio("./audio/sound.mp3")
+    //Add a score system
+
     // We need the DOM element every time we create a new enemy so we
     // store a reference to it in a property of the instance.
     this.root = theRoot;
@@ -22,7 +29,20 @@ class Engine {
   //  - Updates the enemy positions
   //  - Detects a collision between the player and any enemy
   //  - Removes enemies that are too low from the enemies array
+    
   gameLoop = () => {
+      this.player.score +=1
+      document.getElementById("score").innerText=(`Score : ${this.player.score}`)
+      document.getElementById("score").style.color = "blue";
+      document.getElementById("score").style.fontSize = "30px";
+      document.getElementById("score").style.marginTop = "40px";
+      document.getElementById("score").style.marginLeft = "300px";
+
+
+
+      
+      // alert(score);
+    // this.music.play()
     // This code is to see how much time, in milliseconds, has elapsed since the last
     // time this method was called.
     // (new Date).getTime() evaluates to the number of milliseconds since January 1st, 1970 at midnight.
@@ -45,7 +65,7 @@ class Engine {
     this.enemies = this.enemies.filter((enemy) => {
       return !enemy.destroyed;
     });
-    
+
     // We need to perform the addition of enemies until we have enough enemies.
     while (this.enemies.length < MAX_ENEMIES) {
       // We find the next available spot and, using this spot, we create an enemy.
@@ -53,13 +73,10 @@ class Engine {
       const spot = nextEnemySpot(this.enemies);
       this.enemies.push(new Enemy(this.root, spot));
     }
-    
+
     // We check if the player is dead. If he is, we alert the user
     // and return from the method (Why is the return statement important?)
     if (this.isPlayerDead()) {
-      const audio = document.querySelector("audio");
-      audio.style.display="block"
-      audio.play()
       window.alert('Game over');
       return;
     }
@@ -71,16 +88,23 @@ class Engine {
   // This method is not implemented correctly, which is why
   // the burger never dies. In your exercises you will fix this method.
   isPlayerDead = () => {
-     
-      //  audio.play();
-    
+    // window.addEventListener("DOMContentLoaded", event => {
+    //   const audio = document.querySelector(".voice");
+  
+    //   audio.play();
+    // });
 
     let isDead = false;
     this.enemies.forEach((enemy) => {
+//       this.score = 0
+//       scoreF = () => {
+//       score += 5;
+//       alert(score);
+// }
       if (enemy.spot * ENEMY_WIDTH === this.player.x && 
         enemy.y+ENEMY_HEIGHT>=GAME_HEIGHT - PLAYER_HEIGHT - 10)
-        isDead = true      
-
+        isDead = true 
+        this.music.play()     
     });
     return isDead
   };
